@@ -1,0 +1,20 @@
+﻿using Prioritize.Core.Enum;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Prioritize.Core.Models
+{
+    public class TaskItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public TaskFilter Due { get; set; }
+        public string DueDate { get; set; }
+        public string Notes { get; set; }
+        public bool IsExpanded { get; set; } = false;
+        public bool IsCompleted { get; set; } = false;
+    }
+}
