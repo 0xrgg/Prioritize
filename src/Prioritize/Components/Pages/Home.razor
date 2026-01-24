@@ -16,13 +16,14 @@
     }
     else
     {
-        <Prioritize.Components.Shared.FilterBar SelectedFilter="SelectedFilter"></Prioritize.Components.Shared.FilterBar>
+        @* <Prioritize.Components.Shared.FilterBar SelectedFilter="SelectedFilter"></Prioritize.Components.Shared.FilterBar> *@
+        <Prioritize.Components.Shared.FilterBar @bind-SelectedFilter="SelectedFilter"></Prioritize.Components.Shared.FilterBar>
 
         <!-- Task list -->
         <ul class="list-group">
             @foreach (var task in Tasks.Where(task => FilterTask(task)))
             {
-                <Prioritize.Components.Shared.TaskCard TaskItem="task" RemoveTaskCallback="GetTasks"></Prioritize.Components.Shared.TaskCard>
+                <Prioritize.Components.Shared.TaskCard TaskItem="task" RemoveTaskCallback="GetTasks" MarkComplete="GetTasks"></Prioritize.Components.Shared.TaskCard>
             }
         </ul>
 

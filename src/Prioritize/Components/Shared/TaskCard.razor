@@ -7,7 +7,7 @@
 
     <div class="task-header d-flex justify-content-between align-items-center">
         <div class="task-left d-flex align-items-center gap-2">
-            <input type="checkbox" class="task-complete" @bind="TaskItem.IsCompleted" />
+            <input type="checkbox" class="task-complete" checked="@TaskItem.IsCompleted" @onchange="MarkTaskComplete" />
             <span class="task-title" style="@(TaskItem.IsCompleted ? "text-decoration: line-through; color:#999;" : "")">
                 @TaskItem.Title
             </span>
@@ -36,6 +36,7 @@
 @code {
     [Parameter] public TaskItem TaskItem { get; set; }
     [Parameter] public EventCallback<TaskItem> RemoveTaskCallback { get; set; }
+    [Parameter] public EventCallback<TaskItem> MarkComplete { get; set; }
 
     private async Task RemoveTask(TaskItem task)
     {
@@ -48,5 +49,13 @@
     {
         task.IsExpanded = !task.IsExpanded;
         StateHasChanged();
+    }
+
+    private async Task MarkTaskComplete(ChangeEventArgs e)
+    {
+        TaskItem.IsCompleted = (bool)e.Value!;
+        await _taskService.ToggleComplete(TaskItem);
+
+        await MarkComplete.InvokeAsync(TaskItem);
     }
 }

@@ -1,34 +1,106 @@
 ﻿@using Prioritize.Core.Enum
 
-<!-- Filter Bar -->
-<div class="todo-filters">
-    <div class="filter-item @(SelectedFilter == TaskFilter.Incomplete ? "active" : "")"
-            @onclick="() => SelectedFilter = TaskFilter.Incomplete" title="Incomplete">
-        ❌ Incomplete
+
+<div class="todo-filters-container">
+
+    <!-- Desktop buttons -->
+    <div class="todo-filters desktop-only">
+        <div class="filter-item @(SelectedFilter == TaskFilter.Incomplete ? "active" : "")"
+             @onclick="() => SelectFilter(TaskFilter.Incomplete)">
+            ❌ Incomplete
+        </div>
+        <div class="filter-item @(SelectedFilter == TaskFilter.Tomorrow ? "active" : "")"
+             @onclick="() => SelectFilter(TaskFilter.Tomorrow)">
+            📅 Tomorrow
+        </div>
+        <div class="filter-item @(SelectedFilter == TaskFilter.Soon ? "active" : "")"
+             @onclick="() => SelectFilter(TaskFilter.Soon)">
+            ⏳ Soon
+        </div>
+        <div class="filter-item @(SelectedFilter == TaskFilter.NearFuture ? "active" : "")"
+             @onclick="() => SelectFilter(TaskFilter.NearFuture)">
+            🔮 Near Future
+        </div>
+        <div class="filter-item @(SelectedFilter == TaskFilter.Completed ? "active" : "")"
+             @onclick="() => SelectFilter(TaskFilter.Completed)">
+            ✅ Completed
+        </div>
+        <div class="filter-item @(SelectedFilter == TaskFilter.All ? "active" : "")"
+             @onclick="() => SelectFilter(TaskFilter.All)">
+            🗂️ All
+        </div>
     </div>
-    <div class="filter-item @(SelectedFilter == TaskFilter.Tomorrow ? "active" : "")"
-            @onclick="() => SelectedFilter = TaskFilter.Tomorrow" title="Tomorrow">
-        📅 Tomorrow
-    </div>
-    <div class="filter-item @(SelectedFilter == TaskFilter.Soon ? "active" : "")"
-            @onclick="() => SelectedFilter = TaskFilter.Soon" title="Soon">
-        ⏳ Soon
-    </div>
-    <div class="filter-item @(SelectedFilter == TaskFilter.NearFuture ? "active" : "")"
-            @onclick="() => SelectedFilter = TaskFilter.NearFuture" title="Near Future">
-        🔮 Near Future
-    </div>
-    <div class="filter-item @(SelectedFilter == TaskFilter.Completed ? "active" : "")"
-            @onclick="() => SelectedFilter = TaskFilter.Completed" title="Completed">
-        ✅ Completed
-    </div>
-    <div class="filter-item @(SelectedFilter == TaskFilter.All ? "active" : "")"
-            @onclick="() => SelectedFilter = TaskFilter.All" title="All">
-        🗂️ All
+
+    <!-- Mobile dropdown button -->
+    <div class="mobile-only dropdown-container mb-2">
+        <button class="filter-dropdown-toggle filter-item" @onclick="ToggleDropdown">
+            @SelectedFilterIcon @SelectedFilterText
+            <span class="dropdown-arrow">▾</span>
+        </button>
+        @if (DropdownOpen)
+        {
+            <div class="dropdown-menu">
+                <div class="filter-item @(SelectedFilter == TaskFilter.Incomplete ? "active" : "")"
+                     @onclick="() => SelectFilter(TaskFilter.Incomplete)">
+                    ❌ Incomplete
+                </div>
+                <div class="filter-item @(SelectedFilter == TaskFilter.Tomorrow ? "active" : "")"
+                     @onclick="() => SelectFilter(TaskFilter.Tomorrow)">
+                    📅 Tomorrow
+                </div>
+                <div class="filter-item @(SelectedFilter == TaskFilter.Soon ? "active" : "")"
+                     @onclick="() => SelectFilter(TaskFilter.Soon)">
+                    ⏳ Soon
+                </div>
+                <div class="filter-item @(SelectedFilter == TaskFilter.NearFuture ? "active" : "")"
+                     @onclick="() => SelectFilter(TaskFilter.NearFuture)">
+                    🔮 Near Future
+                </div>
+                <div class="filter-item @(SelectedFilter == TaskFilter.Completed ? "active" : "")"
+                     @onclick="() => SelectFilter(TaskFilter.Completed)">
+                    ✅ Completed
+                </div>
+                <div class="filter-item @(SelectedFilter == TaskFilter.All ? "active" : "")"
+                     @onclick="() => SelectFilter(TaskFilter.All)">
+                    🗂️ All
+                </div>
+            </div>
+        }
     </div>
 </div>
 
 
+
 @code {
-    [Parameter] public TaskFilter SelectedFilter { get; set; }
+    [Parameter] public TaskFilter SelectedFilter { get; set; } = TaskFilter.All;
+    [Parameter] public EventCallback<TaskFilter> SelectedFilterChanged { get; set; }
+
+    private bool DropdownOpen { get; set; } = false;
+
+    private void ToggleDropdown()
+    {
+        DropdownOpen = !DropdownOpen;
+    }
+
+    private async Task SelectFilter(TaskFilter filter)
+    {
+        SelectedFilter = filter;
+        DropdownOpen = false;
+
+        await SelectedFilterChanged.InvokeAsync(SelectedFilter);
+    }
+
+    // Optional: show the icon + text of selected filter in the toggle button
+    private string SelectedFilterIcon => SelectedFilter switch
+    {
+        TaskFilter.Incomplete => "❌",
+        TaskFilter.Tomorrow => "📅",
+        TaskFilter.Soon => "⏳",
+        TaskFilter.NearFuture => "🔮",
+        TaskFilter.Completed => "✅",
+        TaskFilter.All => "🗂️",
+        _ => ""
+    };
+
+    private string SelectedFilterText => SelectedFilter.ToString();
 }

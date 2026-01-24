@@ -34,7 +34,7 @@ namespace Prioritize.Core.Services
                 Due = EstablishDueCategory(x)
             });
 
-            return taskList;
+            return taskList.OrderBy(x => x.DueDate);
         }
 
         public async Task AddTask(TaskItem task)
@@ -59,6 +59,18 @@ namespace Prioritize.Core.Services
             _dbContext.Tasks.Remove(entity);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task ToggleComplete(TaskItem task)
+        {
+            var entity = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.Id == task.Id);
+
+            if (entity is null) { return; }
+
+            entity.IsCompleted = task.IsCompleted;
+
+            await _dbContext.SaveChangesAsync();
+
         }
 
         private TaskFilter EstablishDueCategory(TaskItemEntity task)

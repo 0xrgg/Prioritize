@@ -1,5 +1,4 @@
-﻿/* Filter Bar */
-.todo-filters {
+﻿.todo-filters {
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
@@ -29,3 +28,45 @@
         background-color: #005a9e;
         color: #fff;
     }
+
+/* Mobile dropdown */
+.mobile-only {
+    display: none;
+    position: relative;
+}
+
+.filter-dropdown-toggle {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.dropdown-arrow {
+    margin-left: auto;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #f0f0f0;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+    padding: 0.25rem 0;
+    z-index: 1000;
+}
+
+/* Responsive visibility */
+@media (max-width: 775px) {
+    .desktop-only {
+        display: none;
+    }
+
+    .mobile-only {
+        display: block;
+    }
+}

@@ -7,5 +7,7 @@ namespace Prioritize.Core.Services
         Task<IEnumerable<TaskItem>> GetTasks();
         Task AddTask(TaskItem task);
         Task RemoveTask(TaskItem task);
+        Task ToggleComplete(TaskItem task);
+
     }
 }
