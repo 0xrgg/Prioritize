@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Prioritize.Core.Services
 {
-    public class TaskService
+    public class TaskService : ITaskService
     {
         private readonly AppDbContext _dbContext;
 
@@ -28,13 +28,37 @@ namespace Prioritize.Core.Services
             {
                 Id = x.Id,
                 Title = x.Title,
-                DueDate = x.DueDate.ToString(),
+                DueDate = x.DueDate,
                 IsCompleted = x.IsCompleted,
                 Notes = x.Notes,
                 Due = EstablishDueCategory(x)
             });
 
             return taskList;
+        }
+
+        public async Task AddTask(TaskItem task)
+        {
+            await _dbContext.AddAsync(new TaskItemEntity() 
+            {
+                Title = task.Title,
+                Notes = task.Notes,
+                DueDate = task.DueDate,
+                IsCompleted = task.IsCompleted
+            });
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task RemoveTask(TaskItem task)
+        {
+            var entity = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.Id == task.Id);
+
+            if (entity is null) { return; }
+
+            _dbContext.Tasks.Remove(entity);
+
+            await _dbContext.SaveChangesAsync();
         }
 
         private TaskFilter EstablishDueCategory(TaskItemEntity task)

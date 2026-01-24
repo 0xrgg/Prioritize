@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Prioritize.Core.Services;
 
 namespace Prioritize
 {
@@ -18,8 +19,8 @@ namespace Prioritize
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
-    		builder.Logging.AddDebug();
+            builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Logging.AddDebug();
 #endif
 
             var dbPath = DatabasePath.GetDatabasePath();
@@ -28,18 +29,37 @@ namespace Prioritize
                 options.UseSqlite($"Filename={dbPath}")
             );
 
-            return builder.Build();
-        }
-    }
+            builder.Services.AddSingleton<ITaskService, TaskService>();
 
-    public static class DatabasePath
-    {
-        public static string GetDatabasePath()
-        {
-            return Path.Combine(
-                FileSystem.AppDataDirectory,
-                "app.db"
-            );
+            var app = builder.Build();
+
+            ApplyMigrations(app);
+
+            return app;
+
         }
+
+        private static void ApplyMigrations(MauiApp app)
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            // Apply any pending migrations
+            db.Database.Migrate();
+        }
+
     }
 }
+
+public static class DatabasePath
+{
+    public static string GetDatabasePath()
+    {
+        return Path.Combine(
+            FileSystem.AppDataDirectory,
+            "app.db"
+        );
+    }
+}
+
+

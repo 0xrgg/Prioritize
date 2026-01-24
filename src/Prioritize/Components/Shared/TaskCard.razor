@@ -1,0 +1,52 @@
+﻿@using Prioritize.Core.Models
+@using Prioritize.Core.Services
+@inject ITaskService _taskService
+
+<li class="list-group-item task-item @(TaskItem.IsExpanded ? "expanded" : "")">
+
+
+    <div class="task-header d-flex justify-content-between align-items-center">
+        <div class="task-left d-flex align-items-center gap-2">
+            <input type="checkbox" class="task-complete" @bind="TaskItem.IsCompleted" />
+            <span class="task-title" style="@(TaskItem.IsCompleted ? "text-decoration: line-through; color:#999;" : "")">
+                @TaskItem.Title
+            </span>
+        </div>
+        <div class="task-actions">
+            <button class="btn btn-sm btn-secondary" @onclick="() => ToggleDetails(TaskItem)">
+                @(TaskItem.IsExpanded ? "▾" : "▸")
+            </button>
+            <button class="btn btn-sm btn-danger" @onclick="async () => await RemoveTask(TaskItem)">×</button>
+        </div>
+    </div>
+    @if (TaskItem.IsExpanded)
+    {
+        <div class="task-details">
+            <div class="task-divider"></div>
+            <div class="task-detail-row">
+                <p><strong>Due:</strong> @TaskItem.DueDateString</p>
+            </div>
+            <div class="task-detail-row">
+                <p><strong>Notes:</strong> @TaskItem.Notes</p>
+                </div>
+        </div>
+    }
+</li>
+
+@code {
+    [Parameter] public TaskItem TaskItem { get; set; }
+    [Parameter] public EventCallback<TaskItem> RemoveTaskCallback { get; set; }
+
+    private async Task RemoveTask(TaskItem task)
+    {
+        await _taskService.RemoveTask(task);
+
+        await RemoveTaskCallback.InvokeAsync(task);
+    }
+
+    private void ToggleDetails(TaskItem task)
+    {
+        task.IsExpanded = !task.IsExpanded;
+        StateHasChanged();
+    }
+}

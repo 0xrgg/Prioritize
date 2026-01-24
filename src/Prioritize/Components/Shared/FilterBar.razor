@@ -1,0 +1,34 @@
+﻿@using Prioritize.Core.Enum
+
+<!-- Filter Bar -->
+<div class="todo-filters">
+    <div class="filter-item @(SelectedFilter == TaskFilter.Incomplete ? "active" : "")"
+            @onclick="() => SelectedFilter = TaskFilter.Incomplete" title="Incomplete">
+        ❌ Incomplete
+    </div>
+    <div class="filter-item @(SelectedFilter == TaskFilter.Tomorrow ? "active" : "")"
+            @onclick="() => SelectedFilter = TaskFilter.Tomorrow" title="Tomorrow">
+        📅 Tomorrow
+    </div>
+    <div class="filter-item @(SelectedFilter == TaskFilter.Soon ? "active" : "")"
+            @onclick="() => SelectedFilter = TaskFilter.Soon" title="Soon">
+        ⏳ Soon
+    </div>
+    <div class="filter-item @(SelectedFilter == TaskFilter.NearFuture ? "active" : "")"
+            @onclick="() => SelectedFilter = TaskFilter.NearFuture" title="Near Future">
+        🔮 Near Future
+    </div>
+    <div class="filter-item @(SelectedFilter == TaskFilter.Completed ? "active" : "")"
+            @onclick="() => SelectedFilter = TaskFilter.Completed" title="Completed">
+        ✅ Completed
+    </div>
+    <div class="filter-item @(SelectedFilter == TaskFilter.All ? "active" : "")"
+            @onclick="() => SelectedFilter = TaskFilter.All" title="All">
+        🗂️ All
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public TaskFilter SelectedFilter { get; set; }
+}

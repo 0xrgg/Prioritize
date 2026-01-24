@@ -1,0 +1,45 @@
+﻿
+/* Left part of the task (checkbox + title) */
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Checkbox */
+.task-complete {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+    /* Strike-through completed tasks */
+    .task-complete:checked + .task-title {
+        text-decoration: line-through;
+        color: #999;
+    }
+
+/* Task details */
+.task-details {
+    display: none;
+    margin-top: 0.5rem;
+    /*padding-left: 1.5rem;*/
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.task-item.expanded .task-details {
+    display: block;
+}
+
+.task-divider {
+    height: 1px;
+    background: #eee;
+    margin: 0.4rem 0;
+}
+
+.task-detail-row {
+    padding-left: 1.8rem;
+    font-size: 0.9rem;
+    color: #555;
+}

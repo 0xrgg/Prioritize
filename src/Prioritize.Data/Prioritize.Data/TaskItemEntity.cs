@@ -10,7 +10,7 @@ namespace Prioritize.Data
         public string Title { get; set; }
         //public TaskFilter Due { get; set; }
         public DateTimeOffset DueDate { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
         public bool IsCompleted { get; set; }
     }
 

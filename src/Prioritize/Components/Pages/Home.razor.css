@@ -17,53 +17,6 @@
     justify-content: center;
 }
 
-/* Task details */
-.task-details {
-    margin-top: 0.5rem;
-    padding-left: 1rem;
-    color: #555;
-    font-size: 0.9rem;
-}
-
-/* Modal overlay */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Modal content */
-.modal-content {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    max-width: 400px;
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-    .modal-content input,
-    .modal-content textarea {
-        width: 100%;
-        padding: 0.5rem;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-    }
-
-.modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-}
-
 
 /* Filter Bar Container */
 .todo-filters {
@@ -99,71 +52,6 @@
         color: #fff;
     }
 
-/* Filter Bar */
-.todo-filters {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.filter-item {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    background-color: #f0f0f0;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
-    user-select: none;
-}
-
-    .filter-item:hover {
-        background-color: #0078d4;
-        color: #fff;
-        transform: scale(1.05);
-    }
-
-    .filter-item.active {
-        background-color: #005a9e;
-        color: #fff;
-    }
-
-
-/* Left part of the task (checkbox + title) */
-.task-left {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Checkbox */
-.task-complete {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-    /* Strike-through completed tasks */
-    .task-complete:checked + .task-title {
-        text-decoration: line-through;
-        color: #999;
-    }
-
-/* Task details */
-.task-details {
-    display: none;
-    margin-top: 0.5rem;
-    padding-left: 1.5rem;
-    color: #555;
-    font-size: 0.9rem;
-}
-
-.task-item.expanded .task-details {
-    display: block;
-}
 
 /* Floating Add Button */
 .floating-add-btn {
@@ -187,3 +75,6 @@
     .floating-add-btn:hover {
         background-color: #005a9e;
     }
+
+
+

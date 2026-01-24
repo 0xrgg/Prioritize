@@ -1,0 +1,23 @@
+﻿<div class="splash-container">
+    <div class="splash-content">
+        <div class="splash-icon">📝</div>
+        <h2 class="splash-title">No Tasks Yet!</h2>
+        <p class="splash-message">
+            Looks like you don’t have any tasks.. <br>
+            Click the button below to add your first one.
+        </p>
+        <button class="btn btn-primary splash-add-btn" @onclick="ShowAddTaskModal">
+            + Add Task
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool ShowAddTask { get; set; }
+    [Parameter] public EventCallback<bool> ShowAddTaskChanged { get; set; }
+
+    private async Task ShowAddTaskModal()
+    {
+        await ShowAddTaskChanged.InvokeAsync(true);
+    }
+}

@@ -5,140 +5,61 @@
 @using Prioritize.Core.Models
 @using System.Collections.ObjectModel
 @using Microsoft.JSInterop
+@using Prioritize.Core.Services
+@inject ITaskService _taskService
 
 <div class="container">
 
-    <!-- Filter Bar -->
-    <div class="todo-filters">
-        <div class="filter-item @(SelectedFilter == TaskFilter.Incomplete ? "active" : "")"
-             @onclick="() => SelectedFilter = TaskFilter.Incomplete" title="Incomplete">
-            ❌ Incomplete
-        </div>
-        <div class="filter-item @(SelectedFilter == TaskFilter.Tomorrow ? "active" : "")"
-             @onclick="() => SelectedFilter = TaskFilter.Tomorrow" title="Tomorrow">
-            📅 Tomorrow
-        </div>
-        <div class="filter-item @(SelectedFilter == TaskFilter.Soon ? "active" : "")"
-             @onclick="() => SelectedFilter = TaskFilter.Soon" title="Soon">
-            ⏳ Soon
-        </div>
-        <div class="filter-item @(SelectedFilter == TaskFilter.NearFuture ? "active" : "")"
-             @onclick="() => SelectedFilter = TaskFilter.NearFuture" title="Near Future">
-            🔮 Near Future
-        </div>
-        <div class="filter-item @(SelectedFilter == TaskFilter.Completed ? "active" : "")"
-             @onclick="() => SelectedFilter = TaskFilter.Completed" title="Completed">
-            ✅ Completed
-        </div>
-        <div class="filter-item @(SelectedFilter == TaskFilter.All ? "active" : "")"
-             @onclick="() => SelectedFilter = TaskFilter.All" title="All">
-            🗂️ All
-        </div>
-    </div>
+    @if (!Tasks.Any())
+    {
+        <Prioritize.Components.Shared.Splash @bind-ShowAddTask="ShowAddTask"></Prioritize.Components.Shared.Splash>
+    }
+    else
+    {
+        <Prioritize.Components.Shared.FilterBar SelectedFilter="SelectedFilter"></Prioritize.Components.Shared.FilterBar>
 
+        <!-- Task list -->
+        <ul class="list-group">
+            @foreach (var task in Tasks.Where(task => FilterTask(task)))
+            {
+                <Prioritize.Components.Shared.TaskCard TaskItem="task" RemoveTaskCallback="GetTasks"></Prioritize.Components.Shared.TaskCard>
+            }
+        </ul>
 
-    <!-- Task list -->
-    <ul class="list-group">
-        @foreach (var task in Tasks.Where(task => FilterTask(task)))
-        {
-            <li class="list-group-item task-item @(task.IsExpanded ? "expanded" : "")">
+        <!-- Floating Add Button -->
+        <button class="floating-add-btn" @onclick="@(() => ShowAddTask = true)">+</button>
 
-
-                <div class="task-header d-flex justify-content-between align-items-center">
-                    <div class="task-left d-flex align-items-center gap-2">
-                        <input type="checkbox" class="task-complete" @bind="task.IsCompleted" />
-                        <span class="task-title" style="@(task.IsCompleted ? "text-decoration: line-through; color:#999;" : "")">
-                            @task.Title
-                        </span>
-                    </div>
-                    <div class="task-actions">
-                        <button class="btn btn-sm btn-secondary" @onclick="() => ToggleDetails(task)">
-                            @(task.IsExpanded ? "▾" : "▸")
-                        </button>
-                        <button class="btn btn-sm btn-danger" @onclick="() => RemoveTask(task)">×</button>
-                    </div>
-                </div>
-                @if (task.IsExpanded)
-                {
-                    <div class="task-details">
-                        <p><strong>Due:</strong> @task.DueDate</p>
-                        <p><strong>Notes:</strong> @task.Notes</p>
-                    </div>
-                }
-            </li>
-        }
-    </ul>
-
-    <!-- Floating Add Button -->
-    <button class="floating-add-btn" @onclick="@(() => ShowAddTask = true)">+</button>
+        
+    }
 
     <!-- Add Task Modal -->
     @if (ShowAddTask)
     {
-        <div class="modal-overlay" @onclick="() => ShowAddTask = false">
-            <div class="modal-content" @onclick:stopPropagation>
-                <h3>Add New Task</h3>
-                <input placeholder="Task title" @bind="NewTaskTitle" />
-                <input type="datetime-local" placeholder="Due date" @bind="NewDueDate" />
-                @* <InputDate TValue="NewDueDate" @bind="NewDueDate" ></InputDate> *@
-                <textarea placeholder="Notes" @bind="NewTaskNotes"></textarea>
-                <div class="modal-buttons">
-                    <button class="btn btn-primary" @onclick="AddTask">Add</button>
-                    <button class="btn btn-secondary" @onclick="() => ShowAddTask = false">Cancel</button>
-                </div>
-            </div>
-        </div>
+        <Prioritize.Components.Shared.AddTaskModal @bind-ShowAddTask="ShowAddTask" RefreshTaskList="GetTasks"></Prioritize.Components.Shared.AddTaskModal>
     }
-</div>
 
+</div>
 
 
 @code {
     private TaskFilter SelectedFilter = TaskFilter.Incomplete;
 
+    private List<TaskItem> Tasks = new List<TaskItem>();
+
     private bool ShowAddTask = false;
-    private string NewTaskTitle = "";
-    private string NewTaskDueDate = "";
-    private string NewTaskNotes = "";
 
-    private DateTimeOffset NewDueDate { get; set; } = DateTime.UtcNow;
-
-    private List<TaskItem> Tasks = new List<TaskItem>
+    protected override async Task OnInitializedAsync()
     {
-        new TaskItem { Title = "Placeholder Task 1", Due = TaskFilter.Tomorrow, DueDate = "Tomorrow", Notes = "Some notes" },
-        new TaskItem { Title = "Placeholder Task 2", Due = TaskFilter.Soon, DueDate = "Next Week", Notes = "Some notes" },
-        new TaskItem { Title = "Placeholder Task 3", Due = TaskFilter.NearFuture, DueDate = "Next Month", Notes = "Some notes" }
-    };
-
-    private void ToggleDetails(TaskItem task)
-    {
-        task.IsExpanded = !task.IsExpanded;
-        StateHasChanged();
+        await GetTasks();
     }
 
-    private void RemoveTask(TaskItem task)
+    private async Task GetTasks() 
     {
-        Tasks.Remove(task);
+        var tasks = await _taskService.GetTasks();
+
+        Tasks = tasks.ToList();
     }
 
-    private void AddTask()
-    {
-        if (!string.IsNullOrWhiteSpace(NewTaskTitle))
-        {
-            Tasks.Add(new TaskItem
-            {
-                Title = NewTaskTitle,
-                Due = TaskFilter.NearFuture, // default due type
-                DueDate = NewTaskDueDate,
-                Notes = NewTaskNotes
-            });
-        }
-
-        NewTaskTitle = "";
-        NewTaskDueDate = "";
-        NewTaskNotes = "";
-        ShowAddTask = false;
-    }
 
     private bool FilterTask(TaskItem task)
     {

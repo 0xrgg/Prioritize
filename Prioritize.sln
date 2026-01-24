@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36511.14 d17.14
+VisualStudioVersion = 17.14.36511.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize", "src\Prioritize\Prioritize.csproj", "{B77EEAFB-8231-1C72-CC5A-66A9EE9722CA}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize.Core", "src\Prioritize.Core\Prioritize.Core\Prioritize.Core.csproj", "{2EEDAF21-6484-4354-95BC-40F2D6BFF493}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize.Data", "src\Prioritize.Data\Prioritize.Data\Prioritize.Data.csproj", "{68E5D4F5-F1EC-456A-9595-A8702918E9EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize.Migrations", "src\Prioritize.Migrations\Prioritize.Migrations.csproj", "{5CAC5F22-ECBF-4BCE-B957-D57B290687DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{68E5D4F5-F1EC-456A-9595-A8702918E9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68E5D4F5-F1EC-456A-9595-A8702918E9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68E5D4F5-F1EC-456A-9595-A8702918E9EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CAC5F22-ECBF-4BCE-B957-D57B290687DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CAC5F22-ECBF-4BCE-B957-D57B290687DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CAC5F22-ECBF-4BCE-B957-D57B290687DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CAC5F22-ECBF-4BCE-B957-D57B290687DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 		{B77EEAFB-8231-1C72-CC5A-66A9EE9722CA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{2EEDAF21-6484-4354-95BC-40F2D6BFF493} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{68E5D4F5-F1EC-456A-9595-A8702918E9EA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{5CAC5F22-ECBF-4BCE-B957-D57B290687DA} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {335C1B6D-E714-4F6E-B4DE-21FD6FA3D068}

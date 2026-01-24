@@ -1,0 +1,90 @@
+﻿@using Prioritize.Core.Enum
+@using Prioritize.Core.Models
+@using Prioritize.Core.Services
+@inject ITaskService _taskService
+
+
+<div class="modal-overlay" @onclick="() => ShowAddTask = false">
+    <div class="modal-content" @onclick:stopPropagation>
+        <h3>Add New Task</h3>
+
+        <EditForm Model="@NewTask" OnValidSubmit="AddTask" class="add-task-form">
+            <DataAnnotationsValidator />
+
+            <div class="form-group mb-2">
+                <InputText id="title"
+                           class="form-control"
+                           placeholder="What needs to be done?"
+                           @bind-Value="NewTask.Title" />
+                <ValidationMessage For="@(() => NewTask.Title)" class="text-danger" />
+            </div>
+
+            <div class="form-group mb-2">
+                <input type="datetime-local" placeholder="Due date" @bind="NewTask.DueDate" />
+            </div>
+
+            <div class="form-group mb-2">
+                <InputTextArea class="form-control" placeholder="Optional: additional details"
+                               @bind-Value="NewTask.Notes" />
+            </div>
+
+            <div class="modal-buttons mt-4">
+                <button type="submit" class="btn btn-primary">
+                    ➕ Add Task
+                </button>
+                <button type="button"
+                        class="btn btn-secondary"
+                        @onclick="CloseModal">
+                    Cancel
+                </button>
+            </div>
+        </EditForm>
+
+
+        @*         @if (submitted)
+        {
+            <div class="alert alert-success mt-3">Task added successfully!</div>
+        } *@
+
+    </div>
+</div>
+
+@code {
+
+    [Parameter] public EventCallback RefreshTaskList { get; set; }
+    [Parameter] public EventCallback<bool> ShowAddTaskChanged { get; set; }
+    [Parameter] public bool ShowAddTask { get; set; }
+
+    private TaskItem NewTask { get; set; } = CreateBlankTask();
+
+    private static TaskItem CreateBlankTask() => new TaskItem() { DueDate = DateTimeOffset.UtcNow };
+
+    private async Task AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(NewTask.Title))
+        {
+            //Tasks.Add(
+
+            var newTask = new TaskItem
+            {
+                Title = NewTask.Title,
+                Due = TaskFilter.NearFuture, // default due type
+                DueDate = NewTask.DueDate,
+                Notes = NewTask.Notes
+            };
+
+            await _taskService.AddTask(newTask);
+        }
+
+        await CloseModal();
+
+        NewTask = CreateBlankTask();
+
+        await RefreshTaskList.InvokeAsync();
+    }
+
+    private async Task CloseModal()
+    {
+        await ShowAddTaskChanged.InvokeAsync(false);
+    }
+}

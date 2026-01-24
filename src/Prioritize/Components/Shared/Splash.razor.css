@@ -1,0 +1,77 @@
+﻿/* Splash container */
+.splash-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh; /* vertical centering */
+    text-align: center;
+    color: #444;
+    padding: 2rem;
+}
+
+/* Splash content */
+.splash-content {
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: 12px;
+    background: #f9f9f9;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Icon */
+.splash-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 1.2s infinite;
+}
+
+/* Title */
+.splash-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Message */
+.splash-message {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #666;
+}
+
+/* Add button */
+.splash-add-btn {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+    .splash-add-btn:hover {
+        transform: scale(1.05);
+        background-color: #005a9e;
+    }
+
+/* Animations */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

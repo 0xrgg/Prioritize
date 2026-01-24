@@ -1,0 +1,31 @@
+﻿/* Filter Bar */
+.todo-filters {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    background-color: #f0f0f0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    user-select: none;
+}
+
+    .filter-item:hover {
+        background-color: #0078d4;
+        color: #fff;
+        transform: scale(1.05);
+    }
+
+    .filter-item.active {
+        background-color: #005a9e;
+        color: #fff;
+    }
