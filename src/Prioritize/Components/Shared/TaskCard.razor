@@ -3,49 +3,53 @@
 @inject ITaskService _taskService
 
 @* <li class="list-group-item task-item @(TaskItem.IsExpanded ? "expanded" : "")"> *@
-<li class="list-group-item task-item task-card expanded">
+ <ul class="list-group">
+    <li class="list-group-item task-item task-card @(TaskItem.IsExpanded ? "expanded" : "")" @onclick="() => ToggleDetails(TaskItem)">
 
-    <div class="task-header d-flex justify-content-between align-items-center">
-        <div class="task-left d-flex align-items-center gap-2">
-            <input type="checkbox" class="task-complete" checked="@TaskItem.IsCompleted" @onchange="MarkTaskComplete" />
-            <span class="task-title" style="@(TaskItem.IsCompleted ? "text-decoration: line-through; color:#999;" : "")">
-                @TaskItem.Title
-            </span>
-        </div>
-        <div class="task-actions">
-            <button class="btn btn-sm btn-secondary" @onclick="() => ToggleDetails(TaskItem)">
-                @(TaskItem.IsExpanded ? "▾" : "▸")
-            </button>
-            <button class="btn btn-sm btn-light edit-btn"
-                    title="Edit task"
-                    @onclick="EditClicked">
-                ✏️
-            </button>
-            <button class="btn btn-sm btn-danger" @onclick="async () => await RemoveTask(TaskItem)">×</button>
-        </div>
-    </div>
-@*     @if (TaskItem.IsExpanded)
-    { *@
-        <div class="task-details mb-2">
-            <div class="task-divider mb-3"></div>
-            <div class="task-detail-row">
-                <strong>Due:</strong> @TaskItem.DueDateString
+            <div class="task-header d-flex justify-content-between align-items-center">
+                <div class="task-left d-flex align-items-center gap-2">
+                    <input type="checkbox" class="task-complete" checked="@TaskItem.IsCompleted" @onchange="MarkTaskComplete" />
+                    <span class="task-title" style="@(TaskItem.IsCompleted ? "text-decoration: line-through; color:#999;" : "")">
+                        @TaskItem.Title
+                    </span>
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-sm btn-secondary" @onclick="() => ToggleDetails(TaskItem)" @onclick:stopPropagation>
+                        @(TaskItem.IsExpanded ? "▾" : "▸")
+                    </button>
+                    <button class="btn btn-sm btn-light edit-btn"
+                            title="Edit task"
+                            @onclick="EditClicked">
+                        ✏️
+                    </button>
+                    <button class="btn btn-sm btn-danger" @onclick="async () => await RemoveTask(TaskItem)">×</button>
+                </div>
             </div>
-            @if (!String.IsNullOrWhiteSpace(TaskItem.Notes))
-            {
-                <div class="task-detail-row">
-                    <p><strong>Notes:</strong> @TaskItem.Notes</p>
-                </div>                
-            }
-        </div>
-    @* } *@
-</li>
+        @*     @if (TaskItem.IsExpanded)
+            { *@
+                <div class="task-details mb-2">
+                    <div class="task-divider mb-3"></div>
+                    <div class="task-detail-row">
+                        <strong>Due:</strong> @TaskItem.DueDateString
+                    </div>
+                    @if (!String.IsNullOrWhiteSpace(TaskItem.Notes))
+                    {
+                        <div class="task-detail-row">
+                            <p><strong>Notes:</strong> @TaskItem.Notes</p>
+                        </div>                
+                    }
+                </div>
+            @* } *@
+    </li>
+
+ </ul>
 
 @code {
     [Parameter] public TaskItem TaskItem { get; set; }
     [Parameter] public EventCallback<TaskItem> RemoveTaskCallback { get; set; }
     [Parameter] public EventCallback<TaskItem> MarkComplete { get; set; }
     [Parameter] public EventCallback<TaskItem> OnEdit { get; set; }
+    [Parameter] public EventCallback<TaskItem> OnClick { get; set; }
 
     private async Task RemoveTask(TaskItem task)
     {
@@ -57,6 +61,7 @@
     private void ToggleDetails(TaskItem task)
     {
         task.IsExpanded = !task.IsExpanded;
+        OnClick.InvokeAsync(task);
         StateHasChanged();
     }
 

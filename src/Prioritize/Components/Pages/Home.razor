@@ -43,7 +43,8 @@
                                                                    TaskItem="task"
                                                                    RemoveTaskCallback="GetTasks"
                                                                    MarkComplete="MarkComplete"
-                                                                   OnEdit="() => OpenEditModal(task)"/>
+                                                                   OnEdit="() => OpenEditModal(task)"
+                                                                   OnClick="CollapseTasks"/>
                         }
                     </div>
                 </div>
@@ -82,6 +83,16 @@
     protected override async Task OnInitializedAsync()
     {
         await GetTasks();
+    }
+
+    private async Task CollapseTasks(TaskItem clickedTask)
+    {
+        // Collapse all other tasks
+        foreach (var task in Tasks)
+        {
+            if (task != clickedTask)
+                task.IsExpanded = false;
+        }
     }
 
     private async Task MarkComplete(TaskItem task)

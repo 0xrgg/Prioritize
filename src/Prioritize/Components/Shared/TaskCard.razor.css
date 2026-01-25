@@ -1,5 +1,25 @@
-﻿
-/* Left part of the task (checkbox + title) */
+﻿/* ============================
+   Task card base
+   ============================ */
+.task-card {
+    position: relative;
+    transition: opacity 0.2s ease;
+}
+
+/* ============================
+   Dim non-hovered siblings
+   ============================ */
+.list-group:hover .task-card:not(:hover) {
+    opacity: 0.55;
+}
+
+.list-group:hover .task-card:hover {
+    opacity: 1;
+}
+
+/* ============================
+   Task left (checkbox + title)
+   ============================ */
 .task-left {
     display: flex;
     align-items: center;
@@ -19,9 +39,10 @@
         color: #999;
     }
 
-/* Task details */
+/* ============================
+   Task details (collapsed by default)
+   ============================ */
 .task-details {
-    display: block; /* required for animation */
     max-height: 0;
     opacity: 0;
     overflow: hidden;
@@ -32,19 +53,21 @@
     transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease, margin-top 0.2s ease;
 }
 
-/* Reveal on hover */
-.task-card:hover .task-details {
-    max-height: 200px; /* adjust if needed */
+.task-card {
+    cursor: pointer;
+}
+
+/* Expand ONLY when clicked (via .expanded class) */
+.task-card.expanded .task-details {
+    max-height: 500px; /* adjust as needed */
     opacity: 1;
     transform: translateY(0);
     margin-top: 0.5rem;
 }
 
-
-.task-item.expanded .task-details {
-    display: block;
-}
-
+/* ============================
+   Divider & detail rows
+   ============================ */
 .task-divider {
     height: 1px;
     background: #eee;
@@ -55,8 +78,4 @@
     padding-left: 1.8rem;
     font-size: 0.9rem;
     color: #555;
-}
-
-.task-details:hover {
-
 }
