@@ -6,32 +6,34 @@
 
 <div class="modal-overlay" @onclick="() => ShowAddTask = false">
     <div class="modal-content" @onclick:stopPropagation>
-        <h3>Add New Task</h3>
+        <h3>@(IsEditMode ? "Edit Task" : "Add New Task")</h3>
 
-        <EditForm Model="@NewTask" OnValidSubmit="AddTask" class="add-task-form">
+
+        <EditForm EditContext="_editContext" OnValidSubmit="HandleSubmit" class="add-task-form">
             <DataAnnotationsValidator />
 
             <div class="form-group mb-2">
                 <InputText id="title"
                            class="form-control"
                            placeholder="What needs to be done?"
-                           @bind-Value="NewTask.Title" />
-                <ValidationMessage For="@(() => NewTask.Title)" class="text-danger" />
+                           @bind-Value="TaskModel.Title" />
+                <ValidationMessage For="@(() => TaskModel.Title)" class="text-danger" />
             </div>
 
             <div class="form-group mb-2">
-                <input type="datetime-local" placeholder="Due date" @bind="NewTask.DueDate" />
+                <input type="datetime-local" placeholder="Due date" @bind="TaskModel.DueDate" />
             </div>
 
             <div class="form-group mb-2">
                 <InputTextArea class="form-control" placeholder="Optional: additional details"
-                               @bind-Value="NewTask.Notes" />
+                               @bind-Value="TaskModel.Notes" />
             </div>
 
             <div class="modal-buttons mt-4">
                 <button type="submit" class="btn btn-primary">
-                    ➕ Add Task
+                    @(IsEditMode ? "💾 Save Changes" : "➕ Add Task")
                 </button>
+
                 <button type="button"
                         class="btn btn-secondary"
                         @onclick="CloseModal">
@@ -50,27 +52,50 @@
 </div>
 
 @code {
-
+    [Parameter] public TaskItem? EditingTask { get; set; }
     [Parameter] public EventCallback RefreshTaskList { get; set; }
     [Parameter] public EventCallback<bool> ShowAddTaskChanged { get; set; }
     [Parameter] public bool ShowAddTask { get; set; }
 
-    private TaskItem NewTask { get; set; } = CreateBlankTask();
+    private TaskItem TaskModel { get; set; } = CreateBlankTask();
+    private bool IsEditMode => EditingTask != null;
+    private EditContext? _editContext;
 
     private static TaskItem CreateBlankTask() => new TaskItem() { DueDate = DateTimeOffset.UtcNow };
 
+    protected override void OnParametersSet()
+    {
+        if (EditingTask != null)
+        {
+            TaskModel = new TaskItem
+            {
+                Id = EditingTask.Id,
+                Title = EditingTask.Title,
+                Due = EditingTask.Due,
+                DueDate = EditingTask.DueDate,
+                Notes = EditingTask.Notes
+            };
+        }
+        else
+        {
+            TaskModel = CreateBlankTask();
+        }
+
+        _editContext = new EditContext(TaskModel);
+    }
+
     private async Task AddTask()
     {
-        if (!string.IsNullOrWhiteSpace(NewTask.Title))
+        if (!string.IsNullOrWhiteSpace(TaskModel.Title))
         {
             //Tasks.Add(
 
             var newTask = new TaskItem
             {
-                Title = NewTask.Title,
+                Title = TaskModel.Title,
                 Due = TaskFilter.NearFuture, // default due type
-                DueDate = NewTask.DueDate,
-                Notes = NewTask.Notes
+                DueDate = TaskModel.DueDate,
+                Notes = TaskModel.Notes
             };
 
             await _taskService.AddTask(newTask);
@@ -78,10 +103,30 @@
 
         await CloseModal();
 
-        NewTask = CreateBlankTask();
+        TaskModel = CreateBlankTask();
 
         await RefreshTaskList.InvokeAsync();
     }
+
+    private async Task HandleSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(TaskModel.Title))
+            return;
+
+        if (IsEditMode)
+        {
+            await _taskService.UpdateTask(TaskModel);
+        }
+        else
+        {
+            TaskModel.Due = TaskFilter.NearFuture;
+            await _taskService.AddTask(TaskModel);
+        }
+
+        await CloseModal();
+        await RefreshTaskList.InvokeAsync();
+    }
+
 
     private async Task CloseModal()
     {

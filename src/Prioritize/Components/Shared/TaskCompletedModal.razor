@@ -1,0 +1,31 @@
+﻿@if (IsVisible)
+{
+    <div class="completion-overlay" @onclick="Close">
+        <div class="completion-modal" @onclick:stopPropagation>
+            <div class="completion-icon">✅</div>
+
+            <h2 class="completion-title">
+                You’ve completed a task!
+            </h2>
+
+            <p class="completion-subtitle">
+                Nice work — keep the momentum going 💪
+            </p>
+
+            <button class="btn btn-primary completion-button"
+                    @onclick="Close">
+                Continue
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    private async Task Close()
+    {
+        await IsVisibleChanged.InvokeAsync(false);
+    }
+}

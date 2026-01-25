@@ -8,6 +8,7 @@ namespace Prioritize.Core.Services
         Task AddTask(TaskItem task);
         Task RemoveTask(TaskItem task);
         Task ToggleComplete(TaskItem task);
+        Task UpdateTask(TaskItem task);
 
     }
 }

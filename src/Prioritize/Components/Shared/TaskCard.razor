@@ -16,6 +16,11 @@
             <button class="btn btn-sm btn-secondary" @onclick="() => ToggleDetails(TaskItem)">
                 @(TaskItem.IsExpanded ? "▾" : "▸")
             </button>
+            <button class="btn btn-sm btn-light edit-btn"
+                    title="Edit task"
+                    @onclick="EditClicked">
+                ✏️
+            </button>
             <button class="btn btn-sm btn-danger" @onclick="async () => await RemoveTask(TaskItem)">×</button>
         </div>
     </div>
@@ -40,6 +45,7 @@
     [Parameter] public TaskItem TaskItem { get; set; }
     [Parameter] public EventCallback<TaskItem> RemoveTaskCallback { get; set; }
     [Parameter] public EventCallback<TaskItem> MarkComplete { get; set; }
+    [Parameter] public EventCallback<TaskItem> OnEdit { get; set; }
 
     private async Task RemoveTask(TaskItem task)
     {
@@ -61,4 +67,12 @@
 
         await MarkComplete.InvokeAsync(TaskItem);
     }
+
+    private async Task EditClicked()
+    {
+        if (OnEdit.HasDelegate)
+            await OnEdit.InvokeAsync(TaskItem);
+    }
+
+
 }

@@ -61,6 +61,20 @@ namespace Prioritize.Core.Services
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task UpdateTask(TaskItem task)
+        {
+            var entity = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.Id == task.Id);
+
+            if (entity is null) { return; }
+
+            entity.Title = task.Title;
+            entity.DueDate = task.DueDate;
+            entity.Notes = task.Notes;
+
+            await _dbContext.SaveChangesAsync();
+
+        }
+
         public async Task ToggleComplete(TaskItem task)
         {
             var entity = await _dbContext.Tasks.FirstOrDefaultAsync(x => x.Id == task.Id);

@@ -1,0 +1,70 @@
+﻿/* Overlay */
+.completion-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* Modal */
+.completion-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: popIn 0.25s ease-out;
+}
+
+/* Icon */
+.completion-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Text */
+.completion-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.completion-subtitle {
+    color: #666;
+    margin-bottom: 1.75rem;
+}
+
+/* Button */
+.completion-button {
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+}
+
+/* Animations */
+@keyframes popIn {
+    from {
+        transform: scale(0.95) translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
