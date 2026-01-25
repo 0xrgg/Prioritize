@@ -1,59 +1,4 @@
-﻿/* Floating button */
-.floating-add-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #0078d4;
-    color: #fff;
-    font-size: 2rem;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-/* Filter Bar Container */
-.todo-filters {
-    display: flex;
-    justify-content: flex-end; /* aligned right */
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-/* Individual filter items */
-.filter-item {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    background-color: #f0f0f0;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
-    user-select: none; /* prevent text selection on tap */
-}
-
-    .filter-item:hover {
-        background-color: #0078d4;
-        color: #fff;
-        transform: scale(1.05);
-    }
-
-    /* Active state (you can toggle this class in Blazor) */
-    .filter-item.active {
-        background-color: #005a9e;
-        color: #fff;
-    }
-
-
-/* Floating Add Button */
+﻿/* Floating Add Button */
 .floating-add-btn {
     position: fixed;
     bottom: 20px;
@@ -76,5 +21,9 @@
         background-color: #005a9e;
     }
 
-
-
+.list-group {
+    overflow-y: auto;
+    max-height: 90vh;
+    height: 90vh;
+    padding-right: 5px;
+}

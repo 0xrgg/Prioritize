@@ -21,12 +21,25 @@
 
 /* Task details */
 .task-details {
-    display: none;
-    margin-top: 0.5rem;
-    /*padding-left: 1.5rem;*/
+    display: block; /* required for animation */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
     color: #555;
     font-size: 0.9rem;
+    transform: translateY(-4px);
+    transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease, margin-top 0.2s ease;
 }
+
+/* Reveal on hover */
+.task-card:hover .task-details {
+    max-height: 200px; /* adjust if needed */
+    opacity: 1;
+    transform: translateY(0);
+    margin-top: 0.5rem;
+}
+
 
 .task-item.expanded .task-details {
     display: block;
@@ -42,4 +55,8 @@
     padding-left: 1.8rem;
     font-size: 0.9rem;
     color: #555;
+}
+
+.task-details:hover {
+
 }

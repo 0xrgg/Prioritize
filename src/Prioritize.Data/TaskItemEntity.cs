@@ -12,6 +12,8 @@ namespace Prioritize.Data
         public DateTimeOffset DueDate { get; set; }
         public string? Notes { get; set; }
         public bool IsCompleted { get; set; }
+
+        public DateTimeOffset? CompletedDateTime { get; set; }
     }
 
     public class TaskItemEntityConfiguration : IEntityTypeConfiguration<TaskItemEntity>

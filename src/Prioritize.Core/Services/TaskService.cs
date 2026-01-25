@@ -69,6 +69,14 @@ namespace Prioritize.Core.Services
 
             entity.IsCompleted = task.IsCompleted;
 
+            if (task.IsCompleted)
+            {
+                entity.CompletedDateTime = DateTimeOffset.UtcNow;
+            } else
+            {
+                entity.CompletedDateTime = null;
+            }
+
             await _dbContext.SaveChangesAsync();
 
         }
@@ -78,11 +86,11 @@ namespace Prioritize.Core.Services
 
             var today = DateTimeOffset.UtcNow.Date;
 
-            return task.DueDate switch
+            return task.DueDate.Date switch
             {
-                var d when d < today.AddDays(1) => TaskFilter.Tomorrow,
-                var d when d < today.AddDays(7) => TaskFilter.Soon,
-                var d when d < today.AddDays(30) => TaskFilter.NearFuture,
+                var d when d < today.AddDays(2) && d >= today.Date => TaskFilter.Tomorrow,
+                var d when d < today.AddDays(7) && d >= today.Date => TaskFilter.Soon,
+                var d when d < today.AddDays(30) && d >= today.Date => TaskFilter.NearFuture,
                 _ => TaskFilter.All
             };
         }

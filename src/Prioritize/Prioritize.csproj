@@ -65,8 +65,8 @@
         <PackageReference Include="Microsoft.JSInterop" Version="8.0.10" />
     </ItemGroup>
 
-  <ItemGroup>
-      <ProjectReference Include="..\Prioritize.Core\Prioritize.Core\Prioritize.Core.csproj" />
+    <ItemGroup>
+      <ProjectReference Include="..\Prioritize.Core\Prioritize.Core.csproj" />
     </ItemGroup>
 
 </Project>

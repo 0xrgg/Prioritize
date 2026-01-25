@@ -2,8 +2,8 @@
 @using Prioritize.Core.Services
 @inject ITaskService _taskService
 
-<li class="list-group-item task-item @(TaskItem.IsExpanded ? "expanded" : "")">
-
+@* <li class="list-group-item task-item @(TaskItem.IsExpanded ? "expanded" : "")"> *@
+<li class="list-group-item task-item task-card expanded">
 
     <div class="task-header d-flex justify-content-between align-items-center">
         <div class="task-left d-flex align-items-center gap-2">
@@ -19,18 +19,21 @@
             <button class="btn btn-sm btn-danger" @onclick="async () => await RemoveTask(TaskItem)">×</button>
         </div>
     </div>
-    @if (TaskItem.IsExpanded)
-    {
-        <div class="task-details">
-            <div class="task-divider"></div>
+@*     @if (TaskItem.IsExpanded)
+    { *@
+        <div class="task-details mb-2">
+            <div class="task-divider mb-3"></div>
             <div class="task-detail-row">
-                <p><strong>Due:</strong> @TaskItem.DueDateString</p>
+                <strong>Due:</strong> @TaskItem.DueDateString
             </div>
-            <div class="task-detail-row">
-                <p><strong>Notes:</strong> @TaskItem.Notes</p>
-                </div>
+            @if (!String.IsNullOrWhiteSpace(TaskItem.Notes))
+            {
+                <div class="task-detail-row">
+                    <p><strong>Notes:</strong> @TaskItem.Notes</p>
+                </div>                
+            }
         </div>
-    }
+    @* } *@
 </li>
 
 @code {

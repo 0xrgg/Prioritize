@@ -9,9 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5AAFA4DD-B21C-4F49-B9A7-F8A594DC1E67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize.Core", "src\Prioritize.Core\Prioritize.Core\Prioritize.Core.csproj", "{2EEDAF21-6484-4354-95BC-40F2D6BFF493}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize.Core", "src\Prioritize.Core\Prioritize.Core.csproj", "{2EEDAF21-6484-4354-95BC-40F2D6BFF493}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize.Data", "src\Prioritize.Data\Prioritize.Data\Prioritize.Data.csproj", "{68E5D4F5-F1EC-456A-9595-A8702918E9EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize.Data", "src\Prioritize.Data\Prioritize.Data.csproj", "{68E5D4F5-F1EC-456A-9595-A8702918E9EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prioritize.Migrations", "src\Prioritize.Migrations\Prioritize.Migrations.csproj", "{5CAC5F22-ECBF-4BCE-B957-D57B290687DA}"
 EndProject

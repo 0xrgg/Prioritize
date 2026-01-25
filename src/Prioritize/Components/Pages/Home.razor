@@ -21,9 +21,30 @@
 
         <!-- Task list -->
         <ul class="list-group">
-            @foreach (var task in Tasks.Where(task => FilterTask(task)))
+@*             @foreach (var task in Tasks.Where(task => FilterTask(task)).GroupBy(x => x.DueDate.Date))
             {
                 <Prioritize.Components.Shared.TaskCard TaskItem="task" RemoveTaskCallback="GetTasks" MarkComplete="GetTasks"></Prioritize.Components.Shared.TaskCard>
+            } *@
+            @foreach (var taskGroup in Tasks.Where(task => FilterTask(task)).GroupBy(x => x.DueDate.Date))
+            {
+                <div class="mb-4 task-group">
+                    <div class="d-flex align-items-center mb-2">
+                        <h6 class="mb-0 fw-semibold text-muted">
+                            @ToWrittenDate(taskGroup.Key)
+                        </h6>
+                        <hr class="flex-grow-1 ms-3 my-0" />
+                    </div>
+
+                    <div class="ps-2">
+                        @foreach (var task in taskGroup)
+                        {
+                            <Prioritize.Components.Shared.TaskCard TaskItem="task"
+                                                                   RemoveTaskCallback="GetTasks"
+                                                                   MarkComplete="GetTasks" />
+                        }
+                    </div>
+                </div>
+
             }
         </ul>
 
@@ -75,4 +96,25 @@
             _ => true
         };
     }
+
+    static string ToWrittenDate(DateTimeOffset dto)
+    {
+        var date = dto.Date;
+        return $"{date.Day}{GetOrdinalSuffix(date.Day)} {date:MMMM yyyy}";
+    }
+
+    static string GetOrdinalSuffix(int day)
+    {
+        if (day is >= 11 and <= 13)
+            return "th";
+
+        return (day % 10) switch
+        {
+            1 => "st",
+            2 => "nd",
+            3 => "rd",
+            _ => "th"
+        };
+    }
+
 }

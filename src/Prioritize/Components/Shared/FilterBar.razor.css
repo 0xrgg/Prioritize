@@ -61,7 +61,8 @@
 }
 
 /* Responsive visibility */
-@media (max-width: 775px) {
+/*@media (max-width: 775px) {*/
+@media (max-width: 992px) {
     .desktop-only {
         display: none;
     }
