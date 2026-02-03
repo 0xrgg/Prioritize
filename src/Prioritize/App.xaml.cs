@@ -6,7 +6,7 @@
         {
             InitializeComponent();
 
-            db.Database.EnsureCreated();
+            //db.Database.EnsureCreated();
 
             MainPage = new MainPage();
         }
