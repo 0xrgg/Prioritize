@@ -21,36 +21,52 @@
         <Prioritize.Components.Shared.FilterBar @bind-SelectedFilter="SelectedFilter"></Prioritize.Components.Shared.FilterBar>
 
         <!-- Task list -->
-        <ul class="list-group">
-@*             @foreach (var task in Tasks.Where(task => FilterTask(task)).GroupBy(x => x.DueDate.Date))
-            {
-                <Prioritize.Components.Shared.TaskCard TaskItem="task" RemoveTaskCallback="GetTasks" MarkComplete="GetTasks"></Prioritize.Components.Shared.TaskCard>
-            } *@
-            @foreach (var taskGroup in Tasks.Where(task => FilterTask(task)).GroupBy(x => x.DueDate.Date))
-            {
-                <div class="mb-4 task-group">
-                    <div class="d-flex align-items-center mb-2">
-                        <h6 class="mb-0 fw-semibold text-muted">
-                            @ToWrittenDate(taskGroup.Key)
-                        </h6>
-                        <hr class="flex-grow-1 ms-3 my-0" />
-                    </div>
+        var taskGroups = Tasks.Where(task => FilterTask(task)).GroupBy(x => x.DueDate.Date); 
+        @if (!taskGroups.Any())
+        {
+            <div class="filter-empty-container">
+                <div class="filter-empty-content">
+                    <div class="filter-empty-icon">🔎</div>
 
-                    <div class="ps-2">
-                        @foreach (var task in taskGroup)
-                        {
-                            <Prioritize.Components.Shared.TaskCard @key="task.Id"
-                                                                   TaskItem="task"
-                                                                   RemoveTaskCallback="GetTasks"
-                                                                   MarkComplete="MarkComplete"
-                                                                   OnEdit="() => OpenEditModal(task)"
-                                                                   OnClick="CollapseTasks"/>
-                        }
-                    </div>
+                    <h3 class="filter-empty-title">Nothing here</h3>
+
+                    <p class="filter-empty-message">
+                        Try changing the selected filter to see more results.
+                    </p>
                 </div>
+            </div>
 
-            }
-        </ul>
+        } else
+        {
+            <ul class="list-group">
+
+                @foreach (var taskGroup in taskGroups)
+                {
+                    <div class="mb-4 task-group">
+                        <div class="d-flex align-items-center mb-2">
+                            <h6 class="mb-0 fw-semibold text-muted">
+                                @ToWrittenDate(taskGroup.Key)
+                            </h6>
+                            <hr class="flex-grow-1 ms-3 my-0" />
+                        </div>
+
+                        <div class="ps-2">
+                            @foreach (var task in taskGroup)
+                            {
+                                <Prioritize.Components.Shared.TaskCard @key="task.Id"
+                                                                       TaskItem="task"
+                                                                       RemoveTaskCallback="GetTasks"
+                                                                       MarkComplete="MarkComplete"
+                                                                       OnEdit="() => OpenEditModal(task)"
+                                                                       OnClick="CollapseTasks"/>
+                            }
+                        </div>
+                    </div>
+
+                }
+            </ul>
+            
+        }
 
         <!-- Floating Add Button -->
         <button class="floating-add-btn" @onclick="@(() => ShowAddTask = true)">+</button>

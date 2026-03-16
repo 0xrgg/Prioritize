@@ -4,43 +4,65 @@
 
 @* <li class="list-group-item task-item @(TaskItem.IsExpanded ? "expanded" : "")"> *@
  <ul class="list-group">
-    <li class="list-group-item task-item task-card @(TaskItem.IsExpanded ? "expanded" : "")" @onclick="() => ToggleDetails(TaskItem)">
+    <li class="d-flex align-items-start gap-2 task-row">
 
-            <div class="task-header d-flex justify-content-between align-items-center">
+        <!-- Checkbox outside the card -->
+        <input type="checkbox"
+               class="task-complete mt-3"
+               checked="@TaskItem.IsCompleted"
+               @onchange="MarkTaskComplete" />
+
+        <!-- Card container -->
+        <div class="list-group-item task-item task-card flex-grow-1 @(TaskItem.IsExpanded ? "expanded" : "")"
+             @onclick="() => ToggleDetails(TaskItem)">
+
+            <div class="task-header d-flex align-items-center justify-content-between">
                 <div class="task-left d-flex align-items-center gap-2">
-                    <input type="checkbox" class="task-complete" checked="@TaskItem.IsCompleted" @onchange="MarkTaskComplete" />
-                    <span class="task-title" style="@(TaskItem.IsCompleted ? "text-decoration: line-through; color:#999;" : "")">
+                    <span class="expand-caret me-1">
+                        @(TaskItem.IsExpanded ? "▾" : "▸")
+                    </span>
+                    <span class="task-title">
                         @TaskItem.Title
                     </span>
                 </div>
-                <div class="task-actions">
-                    <button class="btn btn-sm btn-secondary" @onclick="() => ToggleDetails(TaskItem)" @onclick:stopPropagation>
-                        @(TaskItem.IsExpanded ? "▾" : "▸")
-                    </button>
+
+                <!-- Action buttons -->
+                <div class="task-actions d-flex gap-2">
                     <button class="btn btn-sm btn-light edit-btn"
                             title="Edit task"
-                            @onclick="EditClicked">
+                            @onclick="EditClicked"
+                            @onclick:stopPropagation>
                         ✏️
                     </button>
-                    <button class="btn btn-sm btn-danger" @onclick="async () => await RemoveTask(TaskItem)">×</button>
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="async () => await RemoveTask(TaskItem)"
+                            @onclick:stopPropagation>
+                        ×
+                    </button>
                 </div>
+
             </div>
-        @*     @if (TaskItem.IsExpanded)
-            { *@
-                <div class="task-details mb-2">
-                    <div class="task-divider mb-3"></div>
+
+            @if (TaskItem.IsExpanded)
+            {
+                <div class="task-details mt-2">
+                    <div class="task-divider mb-2"></div>
                     <div class="task-detail-row">
                         <strong>Due:</strong> @TaskItem.DueDateString
                     </div>
-                    @if (!String.IsNullOrWhiteSpace(TaskItem.Notes))
+                    @if (!string.IsNullOrWhiteSpace(TaskItem.Notes))
                     {
                         <div class="task-detail-row">
-                            <p><strong>Notes:</strong> @TaskItem.Notes</p>
-                        </div>                
+                            <strong>Notes:</strong> @TaskItem.Notes
+                        </div>
                     }
+
                 </div>
-            @* } *@
+            }
+
+        </div>
     </li>
+
 
  </ul>
 

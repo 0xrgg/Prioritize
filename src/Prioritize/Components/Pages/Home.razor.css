@@ -23,7 +23,68 @@
 
 .list-group {
     overflow-y: auto;
-    max-height: 90vh;
-    height: 90vh;
+    /*    max-height: 90vh;
+    height: 90vh;*/
+    max-height: 80vh;
+    height: 80vh;
     padding-right: 5px;
 }
+
+/* Empty helper*/
+/* Container */
+.filter-empty-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+    text-align: center;
+    color: #444;
+    padding: 2rem;
+}
+
+/* Card content */
+.filter-empty-content {
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: 12px;
+    background: #f9f9f9;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Icon */
+.filter-empty-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    animation: bounce 1.2s infinite;
+}
+
+/* Title */
+.filter-empty-title {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Message */
+.filter-empty-message {
+    font-size: 0.95rem;
+    margin-bottom: 1.4rem;
+    color: #666;
+}
+
+/* Reset button */
+.filter-empty-reset-btn {
+    font-size: 1rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #0078d4;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+    .filter-empty-reset-btn:hover {
+        transform: scale(1.05);
+        background-color: #005a9e;
+    }
