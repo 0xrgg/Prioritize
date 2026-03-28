@@ -23,8 +23,6 @@
 
 .list-group {
     overflow-y: auto;
-    /*    max-height: 90vh;
-    height: 90vh;*/
     max-height: 80vh;
     height: 80vh;
     padding-right: 5px;
@@ -88,3 +86,4 @@
         transform: scale(1.05);
         background-color: #005a9e;
     }
+

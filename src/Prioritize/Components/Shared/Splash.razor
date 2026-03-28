@@ -1,10 +1,16 @@
-﻿<div class="splash-container">
+﻿@using Prioritize.Core.Services
+@inject INotificationManagerService _notificationManager
+
+<div class="splash-container">
     <div class="splash-content">
         <div class="splash-icon">📝</div>
         <h2 class="splash-title">No Tasks Yet!</h2>
         <p class="splash-message">
             Looks like you don’t have any tasks.. <br>
             Click the button below to add your first one.
+        </p>
+        <p class="splash-message">
+            Tip: enable notifications for alerts - this will remind you about upcoming events!
         </p>
         <button class="btn btn-primary splash-add-btn" @onclick="ShowAddTaskModal">
             + Add Task
@@ -16,8 +22,15 @@
     [Parameter] public bool ShowAddTask { get; set; }
     [Parameter] public EventCallback<bool> ShowAddTaskChanged { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+
+        await base.OnInitializedAsync();
+    }
+
     private async Task ShowAddTaskModal()
     {
+        await _notificationManager.RequestPermissionsAsync();
         await ShowAddTaskChanged.InvokeAsync(true);
     }
 }

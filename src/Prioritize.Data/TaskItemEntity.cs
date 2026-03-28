@@ -13,6 +13,8 @@ namespace Prioritize.Data
         public string? Notes { get; set; }
         public bool IsCompleted { get; set; }
 
+        public bool IsImportant { get; set; }
+
         public DateTimeOffset? CompletedDateTime { get; set; }
     }
 

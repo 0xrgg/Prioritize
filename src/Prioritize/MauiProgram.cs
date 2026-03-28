@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CommunityToolkit.Maui;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Prioritize;
 using Prioritize.Core.Services;
@@ -12,6 +13,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -22,6 +24,14 @@ public static class MauiProgram
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
+#endif
+
+#if ANDROID
+        builder.Services.AddTransient<INotificationManagerService, Prioritize.Platforms.Android.NotificationManagerService>();
+#elif IOS
+        builder.Services.AddTransient<INotificationManagerService, Prioritize.Platforms.iOS.NotificationManagerService>();
+#elif WINDOWS
+        builder.Services.AddTransient<INotificationManagerService, Prioritize.Platforms.Windows.NotificationManagerService>();
 #endif
 
         // Remove this line - it's not being used

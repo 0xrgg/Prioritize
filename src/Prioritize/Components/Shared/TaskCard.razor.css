@@ -6,11 +6,19 @@
     transition: opacity 0.2s ease;
 }
 
+    .task-card:hover {
+        z-index: -1;
+    }
+
+.expand-caret {
+    font-size: 20px;
+}
+
 /* ============================
    Dim non-hovered siblings
    ============================ */
 .list-group:hover .task-card:not(:hover) {
-    opacity: 0.55;
+    opacity: 0.8;
 }
 
 .list-group:hover .task-card:hover {
@@ -90,4 +98,33 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+
+.custom-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    border-radius: 6px;
+    padding: 4px 0;
+    min-width: 140px;
+    z-index: 1000 !important;
+    border: 1px solid #ddd;
+}
+
+    .custom-menu .dropdown-item {
+        width: 100%;
+        padding: 8px 12px;
+        border: none;
+        background: none;
+        text-align: left;
+    }
+
+        .custom-menu .dropdown-item:hover {
+            background: #f5f5f5;
+        }
+
+.task-btn {
+    background-color: white !important;
 }

@@ -2,7 +2,7 @@
 @using Prioritize.Core.Models
 @using Prioritize.Core.Services
 @inject ITaskService _taskService
-
+@inject INotificationManagerService _notificationManager
 
 <div class="modal-overlay" @onclick="() => ShowAddTask = false">
     <div class="modal-content" @onclick:stopPropagation>
@@ -98,6 +98,10 @@
                 Notes = TaskModel.Notes
             };
 
+            //await _notificationManager.RequestPermissionsAsync();
+            _notificationManager.SendNotification("An event is approaching...", TaskModel.Title, DateTime.Now.AddSeconds(10));
+            _notificationManager.SendNotification("An event is approaching...", TaskModel.Title, TaskModel.DueDate.Date.AddHours(-24));
+
             await _taskService.AddTask(newTask);
         }
 
@@ -122,6 +126,9 @@
             TaskModel.Due = TaskFilter.NearFuture;
             await _taskService.AddTask(TaskModel);
         }
+
+        _notificationManager.SendNotification("An event is approaching...", TaskModel.Title, DateTime.Now.AddSeconds(10));
+        _notificationManager.SendNotification("An event is approaching...", TaskModel.Title, TaskModel.DueDate.Date.AddHours(-24));
 
         await CloseModal();
         await RefreshTaskList.InvokeAsync();

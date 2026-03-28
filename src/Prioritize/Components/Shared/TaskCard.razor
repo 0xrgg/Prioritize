@@ -7,13 +7,13 @@
     <li class="d-flex align-items-start gap-2 task-row">
 
         <!-- Checkbox outside the card -->
-        <input type="checkbox"
+@*         <input type="checkbox"
                class="task-complete mt-3"
                checked="@TaskItem.IsCompleted"
-               @onchange="MarkTaskComplete" />
+               @onchange="MarkTaskComplete" /> *@
 
         <!-- Card container -->
-        <div class="list-group-item task-item task-card flex-grow-1 @(TaskItem.IsExpanded ? "expanded" : "")"
+        <div class="list-group-item task-item task-card flex-grow-1 mb-1 @(TaskItem.IsExpanded ? "expanded" : "")"
              @onclick="() => ToggleDetails(TaskItem)">
 
             <div class="task-header d-flex align-items-center justify-content-between">
@@ -26,21 +26,61 @@
                     </span>
                 </div>
 
-                <!-- Action buttons -->
-                <div class="task-actions d-flex gap-2">
-                    <button class="btn btn-sm btn-light edit-btn"
-                            title="Edit task"
-                            @onclick="EditClicked"
-                            @onclick:stopPropagation>
-                        ✏️
-                    </button>
-                    <button class="btn btn-sm btn-danger"
-                            @onclick="async () => await RemoveTask(TaskItem)"
-                            @onclick:stopPropagation>
-                        ×
-                    </button>
-                </div>
+                <div class="control-container d-flex justify-content-end">
+                    <div class="desktop-only">
+                        <!-- Action buttons -->
+                        <div class="task-actions d-flex gap-2">
+                            <button class="task-btn btn btn-sm @(!TaskItem.IsCompleted ? "btn-outline-success" : "btn-outline-danger")"
+                                    @onclick="MarkTaskComplete"
+                                    @onclick:stopPropagation>
+                                ✓
+                            </button>
+                            <button class="task-btn btn btn-sm btn-outline-warning edit-btn"
+                                    title="Edit task"
+                                    @onclick="EditClicked"
+                                    @onclick:stopPropagation>
+                                ✏️
+                            </button>
+                            <button class="task-btn btn btn-sm btn-outline-danger"
+                                    @onclick="async () => await RemoveTask(TaskItem)"
+                                    @onclick:stopPropagation>
+                                ×
+                            </button>
+                        </div>
+                    </div>
 
+                    <div class="mobile-only">
+                        <div class="task-actions position-relative">
+                            <button class="btn btn-sm btn-light border-0"
+                                    @onclick="ToggleMenu"
+                                    @onclick:stopPropagation>
+                                ☰
+                            </button>
+
+                            @if (showMenu)
+                            {
+                                <div class="custom-menu shadow"
+                                     @onclick:stopPropagation>
+                                    <button class="dropdown-item @(!TaskItem.IsCompleted ? "text-success" : "text-danger")"
+                                            @onclick="MarkTaskComplete"
+                                            @onclick:stopPropagation>
+                                        Complete
+                                    </button>
+                                    <button class="dropdown-item"
+                                            @onclick="EditClicked">
+                                        Edit
+                                    </button>
+
+                                    <button class="dropdown-item text-danger"
+                                            @onclick="async () => await RemoveTask(TaskItem)">
+                                        Delete
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
             @if (TaskItem.IsExpanded)
@@ -73,23 +113,31 @@
     [Parameter] public EventCallback<TaskItem> OnEdit { get; set; }
     [Parameter] public EventCallback<TaskItem> OnClick { get; set; }
 
+    bool showMenu = false;
+
+    void ToggleMenu()
+    {
+        showMenu = !showMenu;
+    }
+
     private async Task RemoveTask(TaskItem task)
     {
         await _taskService.RemoveTask(task);
-
+        showMenu = false;
         await RemoveTaskCallback.InvokeAsync(task);
     }
 
     private void ToggleDetails(TaskItem task)
     {
         task.IsExpanded = !task.IsExpanded;
+        showMenu = false;
         OnClick.InvokeAsync(task);
         StateHasChanged();
     }
 
-    private async Task MarkTaskComplete(ChangeEventArgs e)
+    private async Task MarkTaskComplete() // ChangeEventArgs e)
     {
-        TaskItem.IsCompleted = (bool)e.Value!;
+        TaskItem.IsCompleted = !TaskItem.IsCompleted;
         await _taskService.ToggleComplete(TaskItem);
 
         await MarkComplete.InvokeAsync(TaskItem);
@@ -98,7 +146,10 @@
     private async Task EditClicked()
     {
         if (OnEdit.HasDelegate)
+        {
             await OnEdit.InvokeAsync(TaskItem);
+            showMenu = false;
+        }
     }
 
 

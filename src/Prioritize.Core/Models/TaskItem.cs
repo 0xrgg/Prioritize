@@ -15,6 +15,8 @@ namespace Prioritize.Core.Models
         public string? Notes { get; set; }
         public bool IsCompleted { get; set; } = false;
 
+        public bool IsImportant { get; set; } = false;
+
         // Presentation layer stuff
         public bool IsExpanded { get; set; } = false;
 
