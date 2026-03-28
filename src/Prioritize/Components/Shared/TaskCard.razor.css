@@ -6,23 +6,14 @@
     transition: opacity 0.2s ease;
 }
 
-    .task-card:hover {
-        z-index: -1;
+    .task-card.expanded,
+    .task-card:has(.custom-menu) {
+        z-index: 100;
+        position: relative;
     }
 
 .expand-caret {
     font-size: 20px;
-}
-
-/* ============================
-   Dim non-hovered siblings
-   ============================ */
-.list-group:hover .task-card:not(:hover) {
-    opacity: 0.8;
-}
-
-.list-group:hover .task-card:hover {
-    opacity: 1;
 }
 
 /* ============================

@@ -64,7 +64,7 @@
                                     <button class="dropdown-item @(!TaskItem.IsCompleted ? "text-success" : "text-danger")"
                                             @onclick="MarkTaskComplete"
                                             @onclick:stopPropagation>
-                                        Complete
+                                        @(!TaskItem.IsCompleted ? "Complete" : "Mark incomplete")
                                     </button>
                                     <button class="dropdown-item"
                                             @onclick="EditClicked">

@@ -31,7 +31,7 @@
 
             <div class="modal-buttons mt-4">
                 <button type="submit" class="btn btn-primary">
-                    @(IsEditMode ? "💾 Save Changes" : "➕ Add Task")
+                    @(IsEditMode ? "Save Changes" : "Add Task")
                 </button>
 
                 <button type="button"
@@ -98,10 +98,6 @@
                 Notes = TaskModel.Notes
             };
 
-            //await _notificationManager.RequestPermissionsAsync();
-            _notificationManager.SendNotification("An event is approaching...", TaskModel.Title, DateTime.Now.AddSeconds(10));
-            _notificationManager.SendNotification("An event is approaching...", TaskModel.Title, TaskModel.DueDate.Date.AddHours(-24));
-
             await _taskService.AddTask(newTask);
         }
 
@@ -127,8 +123,8 @@
             await _taskService.AddTask(TaskModel);
         }
 
-        _notificationManager.SendNotification("An event is approaching...", TaskModel.Title, DateTime.Now.AddSeconds(10));
-        _notificationManager.SendNotification("An event is approaching...", TaskModel.Title, TaskModel.DueDate.Date.AddHours(-24));
+        _notificationManager.SendNotification($"A task is approaching it's due date", TaskModel.Title, DateTime.Now.AddSeconds(10));
+        _notificationManager.SendNotification($"A task is approaching it's due date", TaskModel.Title, TaskModel.DueDate.Date.AddHours(-24));
 
         await CloseModal();
         await RefreshTaskList.InvokeAsync();
