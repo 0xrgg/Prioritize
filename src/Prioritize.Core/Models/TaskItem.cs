@@ -20,6 +20,8 @@ namespace Prioritize.Core.Models
         // Presentation layer stuff
         public bool IsExpanded { get; set; } = false;
 
+        public bool ShowContextMenu { get; set; } = false;
+
         // Used only for binding
         public string DueDateString
         {

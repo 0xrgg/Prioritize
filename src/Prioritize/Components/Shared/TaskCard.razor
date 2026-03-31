@@ -57,7 +57,7 @@
                                 ☰
                             </button>
 
-                            @if (showMenu)
+                            @if (TaskItem.ShowContextMenu)
                             {
                                 <div class="custom-menu shadow"
                                      @onclick:stopPropagation>
@@ -112,25 +112,33 @@
     [Parameter] public EventCallback<TaskItem> MarkComplete { get; set; }
     [Parameter] public EventCallback<TaskItem> OnEdit { get; set; }
     [Parameter] public EventCallback<TaskItem> OnClick { get; set; }
+    [Parameter] public EventCallback<TaskItem> OnMenuClicked { get; set; }
+
+    // will be true 
+    [Parameter] public bool HideMenu { get; set; }
 
     bool showMenu = false;
 
     void ToggleMenu()
     {
-        showMenu = !showMenu;
+        //showMenu = !showMenu;
+        TaskItem.ShowContextMenu = !TaskItem.ShowContextMenu;
+        OnMenuClicked.InvokeAsync(TaskItem);
     }
 
     private async Task RemoveTask(TaskItem task)
     {
         await _taskService.RemoveTask(task);
-        showMenu = false;
+        //showMenu = false;
+        TaskItem.ShowContextMenu = false;
         await RemoveTaskCallback.InvokeAsync(task);
     }
 
     private void ToggleDetails(TaskItem task)
     {
         task.IsExpanded = !task.IsExpanded;
-        showMenu = false;
+        //showMenu = false;
+        TaskItem.ShowContextMenu = false;
         OnClick.InvokeAsync(task);
         StateHasChanged();
     }
@@ -148,7 +156,8 @@
         if (OnEdit.HasDelegate)
         {
             await OnEdit.InvokeAsync(TaskItem);
-            showMenu = false;
+            //showMenu = false;
+            TaskItem.ShowContextMenu = false;
         }
     }
 

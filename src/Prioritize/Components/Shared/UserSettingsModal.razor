@@ -1,0 +1,124 @@
+﻿@if (IsOpen)
+{
+    <div class="modal-overlay" @onclick="Close">
+        <div class="modal-container" @onclick:stopPropagation="true">
+
+            <!-- Header -->
+@*             <div class="modal-header">
+                <h3>User Settings</h3>
+                <button class="close-btn" @onclick="Close">✕</button>
+            </div> *@
+
+            <!-- Body -->
+            <div class="modal-body">
+
+                <!-- Profile Section -->
+                <div class="section">
+                    <h4>Profile</h4>
+ @*                    <label>Name</label> *@
+                    <input type="text" @bind="UserName" placeholder="Name" class="input" />
+                </div>
+
+                <!-- Preferences -->
+                <div class="section">
+                    <h4>Preferences</h4>
+
+                    <div class="toggle-row" @onclick="ToggleNotifications">
+
+                        <div class="toggle-text">
+                            <span class="title">Enable Notifications</span>
+                            <small>Receive updates and reminders</small>
+                        </div>
+
+                        <div class="toggle-switch @(NotificationsEnabled ? "on" : "")">
+                            <div class="toggle-thumb"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="section">
+                    <h4>Stats</h4>
+
+                    <div class="stats-grid">
+
+                        <div class="stat stat-active">
+                            <span class="label">Active</span>
+                            <span class="value">@ActiveCount</span>
+                        </div>
+
+                        <div class="stat stat-completed">
+                            <span class="label">Completed</span>
+                            <span class="value">@CompletedCount</span>
+                        </div>
+
+                        <div class="stat stat-overdue">
+                            <span class="label">Overdue</span>
+                            <span class="value">@OverdueCount</span>
+                        </div>
+
+                        <div class="stat stat-rate">
+                            <span class="label">Completion Rate</span>
+                            <span class="value">@CompletionRate%</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button class="btn secondary" @onclick="Close">Cancel</button>
+                <button class="btn primary" @onclick="Save">Save</button>
+            </div>
+
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter] public string? UserName { get; set; } = "";
+    [Parameter] public bool NotificationsEnabled { get; set; }
+
+    // Placeholder stats
+    [Parameter] public int ActiveCount { get; set; } = 5;
+    [Parameter] public int CompletedCount { get; set; } = 20;
+
+    [Parameter] public int OverdueCount { get; set; } = 2;
+
+    int CompletionRate => (ActiveCount + CompletedCount) == 0
+        ? 0
+        : (int)((double)CompletedCount / (ActiveCount + CompletedCount) * 100);
+
+    protected override Task OnInitializedAsync()
+    {
+        UserName = Preferences.Get("username", null);
+
+        return base.OnInitializedAsync();
+    }
+
+    async Task Close()
+    {
+        await IsOpenChanged.InvokeAsync(false);
+    }
+
+    async Task Save()
+    {
+        // TODO: Persist settings (API / local storage / state container)
+
+        Preferences.Set("username", UserName);
+
+        await IsOpenChanged.InvokeAsync(false);
+    }
+
+    void ToggleNotifications()
+    {
+        NotificationsEnabled = !NotificationsEnabled;
+    }
+
+}

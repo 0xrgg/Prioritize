@@ -37,7 +37,7 @@
             @SelectedFilterIcon @SelectedFilterText
             <span class="dropdown-arrow">▾</span>
         </button>
-        @if (DropdownOpen)
+        @if (!Hide)
         {
             <div class="dropdown-menu">
                 <div class="filter-item @(SelectedFilter == TaskFilter.Incomplete ? "active" : "")"
@@ -74,18 +74,28 @@
 @code {
     [Parameter] public TaskFilter SelectedFilter { get; set; } = TaskFilter.All;
     [Parameter] public EventCallback<TaskFilter> SelectedFilterChanged { get; set; }
+    [Parameter] public bool Hide { get; set; } = true;
+    [Parameter] public EventCallback OnFilterOpened { get; set; }
 
     private bool DropdownOpen { get; set; } = false;
 
+    public void HideDropdown() {
+        Hide = true;
+    }
+
     private void ToggleDropdown()
     {
-        DropdownOpen = !DropdownOpen;
+        //DropdownOpen = !DropdownOpen;
+        Hide = !Hide;
+        OnFilterOpened.InvokeAsync();
+        StateHasChanged();
     }
 
     private async Task SelectFilter(TaskFilter filter)
     {
         SelectedFilter = filter;
-        DropdownOpen = false;
+        //DropdownOpen = false;
+        Hide = true;
 
         await SelectedFilterChanged.InvokeAsync(SelectedFilter);
     }

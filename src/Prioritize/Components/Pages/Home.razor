@@ -9,7 +9,7 @@
 @using Prioritize.Core.Services
 @inject ITaskService _taskService
 
-<div class="container">
+<div class="container" @onclick="HideTasks">
 
     @if (!Tasks.Any())
     {
@@ -17,7 +17,7 @@
     }
     else
     {
-        <Prioritize.Components.Shared.FilterBar @bind-SelectedFilter="SelectedFilter"></Prioritize.Components.Shared.FilterBar>
+        <Prioritize.Components.Shared.FilterBar @ref="FilterBar" @bind-SelectedFilter="SelectedFilter" OnFilterOpened="HideTasks" ></Prioritize.Components.Shared.FilterBar>
 
         <!-- Task list -->
         var taskGroups = Tasks.Where(task => FilterTask(task)).GroupBy(x => x.DueDate.Date); 
@@ -57,7 +57,9 @@
                                                                        RemoveTaskCallback="GetTasks"
                                                                        MarkComplete="MarkComplete"
                                                                        OnEdit="() => OpenEditModal(task)"
-                                                                       OnClick="CollapseTasks"/>
+                                                                       OnClick="CollapseTasks"
+                                                                       OnMenuClicked="ContextMenuClicked"
+                                                                       />
                             }
                         </div>
                     </div>
@@ -67,6 +69,8 @@
             
         }
 
+        <button class="floating-config-btn" @onclick="@(() => ShowUserSettings = true)">☰</button>
+
         <!-- Floating Add Button -->
         <button class="floating-add-btn" @onclick="@(() => ShowAddTask = true)">+</button>
 
@@ -74,10 +78,10 @@
     }
 
     <!-- Add Task Modal -->
-    @if (ShowAddTask)
-    {
-        <Prioritize.Components.Shared.AddTaskModal @bind-ShowAddTask="ShowAddTask" RefreshTaskList="GetTasks" EditingTask="EditingTask"></Prioritize.Components.Shared.AddTaskModal>
-    }
+    <Prioritize.Components.Shared.AddTaskModal @bind-ShowAddTask="ShowAddTask" RefreshTaskList="GetTasks" EditingTask="EditingTask"></Prioritize.Components.Shared.AddTaskModal>
+
+    <!-- User Settings Modal -->
+    <UserSettingsModal IsOpen="ShowUserSettings" ActiveCount="Tasks.Where(x => !x.IsCompleted).Count()" CompletedCount="Tasks.Where(x => x.IsCompleted).Count()" IsOpenChanged="OnToggleSettings"></UserSettingsModal>
 
     <TaskCompletedModal @bind-IsVisible="ShowCompletionModal" />
 
@@ -86,6 +90,7 @@
 
 
 @code {
+    private FilterBar? FilterBar;
     private TaskFilter SelectedFilter = TaskFilter.Incomplete;
 
     private List<TaskItem> Tasks = new List<TaskItem>();
@@ -93,11 +98,27 @@
     private TaskItem EditingTask { get; set; }
 
     private bool ShowAddTask = false;
+    private bool ShowUserSettings = false;
+
     private bool ShowCompletionModal;
+    private bool HideOtherContextMenus = false;
+    private bool HideFilter = true;
 
     protected override async Task OnInitializedAsync()
     {
         await GetTasks();
+    }
+
+    private async void HideTasks()
+    {
+        Tasks.ToList().ForEach(t => t.ShowContextMenu = false);
+    }
+
+    private async void ContextMenuClicked(TaskItem task)
+    {
+        Tasks.Where(x => x != task).ToList().ForEach(t => t.ShowContextMenu = false);
+        FilterBar?.HideDropdown();
+
     }
 
     private async Task CollapseTasks(TaskItem clickedTask)
@@ -107,6 +128,7 @@
         {
             if (task != clickedTask)
                 task.IsExpanded = false;
+            task.ShowContextMenu = false;
         }
     }
 
@@ -167,5 +189,8 @@
             _ => "th"
         };
     }
-
+    private void OnToggleSettings(bool args)
+    {
+        ShowUserSettings = false;
+    }
 }

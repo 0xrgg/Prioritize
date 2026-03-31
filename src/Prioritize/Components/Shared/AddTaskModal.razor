@@ -4,52 +4,49 @@
 @inject ITaskService _taskService
 @inject INotificationManagerService _notificationManager
 
-<div class="modal-overlay" @onclick="() => ShowAddTask = false">
-    <div class="modal-content" @onclick:stopPropagation>
-        <h3>@(IsEditMode ? "Edit Task" : "Add New Task")</h3>
+@if (ShowAddTask)
+{
+    <div class="modal-overlay" @onclick="() => ShowAddTask = false">
+        <div class="modal-content" @onclick:stopPropagation>
+            <h3>@(IsEditMode ? "Edit Task" : "Add New Task")</h3>
 
 
-        <EditForm EditContext="_editContext" OnValidSubmit="HandleSubmit" class="add-task-form">
-            <DataAnnotationsValidator />
+            <EditForm EditContext="_editContext" OnValidSubmit="HandleSubmit" class="add-task-form">
+                <DataAnnotationsValidator />
 
-            <div class="form-group mb-2">
-                <InputText id="title"
-                           class="form-control"
-                           placeholder="What needs to be done?"
-                           @bind-Value="TaskModel.Title" />
-                <ValidationMessage For="@(() => TaskModel.Title)" class="text-danger" />
-            </div>
+                <div class="form-group mb-2">
+                    <InputText id="title"
+                    class="form-control"
+                    placeholder="What needs to be done?"
+                    @bind-Value="TaskModel.Title" />
+                    <ValidationMessage For="@(() => TaskModel.Title)" class="text-danger" />
+                </div>
 
-            <div class="form-group mb-2">
-                <input type="datetime-local" placeholder="Due date" @bind="TaskModel.DueDate" />
-            </div>
+                <div class="form-group mb-2">
+                    <input type="datetime-local" placeholder="Due date" @bind="TaskModel.DueDate" />
+                </div>
 
-            <div class="form-group mb-2">
-                <InputTextArea class="form-control" placeholder="Optional: additional details"
-                               @bind-Value="TaskModel.Notes" />
-            </div>
+                <div class="form-group mb-2">
+                    <InputTextArea class="form-control" placeholder="Optional: additional details"
+                    @bind-Value="TaskModel.Notes" />
+                </div>
 
-            <div class="modal-buttons mt-4">
-                <button type="submit" class="btn btn-primary">
-                    @(IsEditMode ? "Save Changes" : "Add Task")
-                </button>
+                <div class="modal-buttons mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        @(IsEditMode ? "Save Changes" : "Add Task")
+                    </button>
 
-                <button type="button"
-                        class="btn btn-secondary"
-                        @onclick="CloseModal">
-                    Cancel
-                </button>
-            </div>
-        </EditForm>
+                    <button type="button"
+                    class="btn btn-secondary"
+                    @onclick="CloseModal">
+                        Cancel
+                    </button>
+                </div>
+            </EditForm>
 
-
-        @*         @if (submitted)
-        {
-            <div class="alert alert-success mt-3">Task added successfully!</div>
-        } *@
-
+        </div>
     </div>
-</div>
+}
 
 @code {
     [Parameter] public TaskItem? EditingTask { get; set; }
@@ -88,8 +85,6 @@
     {
         if (!string.IsNullOrWhiteSpace(TaskModel.Title))
         {
-            //Tasks.Add(
-
             var newTask = new TaskItem
             {
                 Title = TaskModel.Title,
@@ -123,8 +118,21 @@
             await _taskService.AddTask(TaskModel);
         }
 
-        _notificationManager.SendNotification($"A task is approaching it's due date", TaskModel.Title, DateTime.Now.AddSeconds(10));
-        _notificationManager.SendNotification($"A task is approaching it's due date", TaskModel.Title, TaskModel.DueDate.Date.AddHours(-24));
+        TaskModel = CreateBlankTask();
+
+        var userName = Preferences.Get("username", null);
+        var message = string.Empty;
+
+        if (userName is not null)
+        {
+            message = $"{userName} - a task is approaching it's due date!";
+        } else
+        {
+            message = "A task is approaching it's due date";
+        }
+
+        _notificationManager.SendNotification(message, TaskModel.Title, DateTime.Now.AddSeconds(10));
+        _notificationManager.SendNotification(message, TaskModel.Title, TaskModel.DueDate.Date.AddDays(-1));
 
         await CloseModal();
         await RefreshTaskList.InvokeAsync();
