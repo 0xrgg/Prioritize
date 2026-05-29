@@ -55,30 +55,19 @@ public static class MauiProgram
     private static void ApplyMigrations(MauiApp app)
     {
         using var scope = app.Services.CreateScope();
-
-        System.Diagnostics.Debug.WriteLine($"=== BEFORE GETTING DBCONTEXT ===");
-
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-        System.Diagnostics.Debug.WriteLine($"=== GOT DBCONTEXT ===");
 
         try
         {
-            // Get connection string FIRST before doing anything
             var connString = db.Database.GetConnectionString();
-            System.Diagnostics.Debug.WriteLine($"Connection string from DbContext: '{connString}'");
 
-            // Also check if DbContext has options configured
             var optionsDebug = db.Database.ProviderName;
-            System.Diagnostics.Debug.WriteLine($"Provider name: {optionsDebug}");
 
             db.Database.Migrate();
-
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"ERROR: {ex.Message}");
-            System.Diagnostics.Debug.WriteLine($"Stack: {ex.StackTrace}");
         }
     }
 }
