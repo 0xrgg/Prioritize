@@ -1,13 +1,10 @@
-﻿@if (IsOpen)
+﻿@using Prioritize.Core.Services
+@inject INotificationManagerService _notificationManager
+
+@if (IsOpen)
 {
     <div class="modal-overlay" @onclick="Close">
         <div class="modal-container" @onclick:stopPropagation="true">
-
-            <!-- Header -->
-@*             <div class="modal-header">
-                <h3>User Settings</h3>
-                <button class="close-btn" @onclick="Close">✕</button>
-            </div> *@
 
             <!-- Body -->
             <div class="modal-body">
@@ -108,16 +105,17 @@
 
     async Task Save()
     {
-        // TODO: Persist settings (API / local storage / state container)
-
         Preferences.Set("username", UserName);
 
         await IsOpenChanged.InvokeAsync(false);
     }
 
-    void ToggleNotifications()
+    async Task ToggleNotifications()
     {
         NotificationsEnabled = !NotificationsEnabled;
+
+        // only happens once - possibly needs to be revoked with the toggle switch
+        await _notificationManager.RequestPermissionsAsync();
     }
 
 }

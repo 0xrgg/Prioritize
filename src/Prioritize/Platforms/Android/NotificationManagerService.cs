@@ -28,8 +28,6 @@ namespace Prioritize.Platforms.Android
 
         public NotificationManagerService()
         {
-            System.Diagnostics.Debug.WriteLine("=== NotificationManagerService created ===");
-
             if (Instance == null)
             {
                 CreateNotificationChannel();
@@ -40,8 +38,6 @@ namespace Prioritize.Platforms.Android
 
         public void SendNotification(string title, string message, DateTime? notifyTime = null)
         {
-            System.Diagnostics.Debug.WriteLine($"=== SendNotification called, notifyTime: {notifyTime} ===");
-
             if (!channelInitialized)
             {
                 CreateNotificationChannel();
@@ -128,7 +124,6 @@ namespace Prioritize.Platforms.Android
 
         public async Task RequestPermissionsAsync()
         {
-            System.Diagnostics.Debug.WriteLine($"=== SDK Version: {Build.VERSION.SdkInt} ===");
 
             // Notification permission (Android 13+ = API 33)
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
@@ -145,14 +140,12 @@ namespace Prioritize.Platforms.Android
             // Exact alarm (Android 12+ = API 31)
             if (Build.VERSION.SdkInt >= BuildVersionCodes.S)
             {
-                System.Diagnostics.Debug.WriteLine("=== Checking exact alarm permission ===");
                 var alarmManager = Platform.AppContext
                     .GetSystemService(Context.AlarmService) as AlarmManager;
 
                 if (alarmManager != null)
                 {
                     bool canSchedule = alarmManager.CanScheduleExactAlarms();
-                    System.Diagnostics.Debug.WriteLine($"=== CanScheduleExactAlarms: {canSchedule} ===");
 
                     if (!canSchedule)
                     {

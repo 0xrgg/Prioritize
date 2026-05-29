@@ -1,11 +1,6 @@
 ﻿using Foundation;
 using Prioritize.Core.Models;
 using Prioritize.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UserNotifications;
 
 namespace Prioritize.Platforms.iOS
