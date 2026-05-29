@@ -54,7 +54,7 @@
 
 .task-card {
     cursor: pointer;
-    background-color: beige;
+    background: #eff6ff;
     border-radius: 5px;
 }
 
@@ -89,6 +89,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border: solid !important;
+    border-width: thin !important;
 }
 
 
